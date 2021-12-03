@@ -43,6 +43,15 @@ const PrevBookings = () => {
     //     </View>
     //   )
     // }
+
+    // if(!appointments || appointments.length === 0){
+    //   return (
+    //     <View style={{ justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
+    //     <Entypo name="emoji-sad" size={70} color={COLORS.primary} />
+    //     <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didnt have any previous appointments</Text>
+    //   </View>
+    //   )
+    // }
     return (
 
       <>
@@ -96,19 +105,22 @@ const PrevBookings = () => {
                     
                   </View>
                   {item.isReviewed ?
-                      null
-                      :
+                          <Text style={{color:COLORS.primary, fontWeight:"bold", fontSize:16, paddingVertical:10, paddingHorizontal:10}}>
+                          You already reviewed
+                      </Text>:
                       <TouchableOpacity style={{paddingVertical:10, paddingHorizontal:10}} onPress={()=>navigation.navigate("addReview",{data:item})} >
                           <Text style={{color:COLORS.primary, fontWeight:"bold", fontSize:16}}>
                               Give Review
                           </Text>
                       </TouchableOpacity>
+              
+                          
                   }
            
               </View>
               )
             }):
-              <View style={{flex:1, justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
+              <View style={{ justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
                 <Entypo name="emoji-sad" size={70} color={COLORS.primary} />
                 <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didnt have any previous appointments</Text>
               </View>

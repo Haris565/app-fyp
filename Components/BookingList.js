@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react'
-import { StyleSheet, Text, View,Dimensions, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View,Dimensions, ActivityIndicator,ScrollView } from 'react-native'
 import { ListItem, Avatar } from 'react-native-elements'
 import { useSelector, useDispatch } from 'react-redux'
 import { Entypo } from '@expo/vector-icons';
@@ -48,7 +48,7 @@ const BookingList = () => {
      
       
       :
-      <View style={{}}>
+      <ScrollView style={{marginBottom:200}}>
         
         {appointments && appointments.length !== 0 ? appointments.map((item, index)=>{
           return (
@@ -92,13 +92,13 @@ const BookingList = () => {
             </View>
           )
         }): 
-        <View style={{flex:1, justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
+        <View style={{ justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
             <Entypo name="emoji-sad" size={70} color={COLORS.primary} />
             <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didnt have any upcoming appointments</Text>
         </View>
         }
         
-      </View>
+      </ScrollView>
       }
       </>
         

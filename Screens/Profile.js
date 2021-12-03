@@ -4,6 +4,8 @@ import { Avatar, Header, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from "../consts/color";
 import { AntDesign } from '@expo/vector-icons';
+import { useSelector } from 'react-redux';
+
 
 
 const Left = ({navigation}) =>{
@@ -15,8 +17,12 @@ const Left = ({navigation}) =>{
 
 
 const Profile = ({navigation}) => {
+    const user = useSelector(state => state.auth.user)
+    console.log(user)
 
-    const [val, setval] = useState('Haris')
+    const [name, setName] = useState(user.name)
+    const [email, setemail] = useState(user.email)
+    const [phone, setphone] = useState(user.number)
     return (
         <View style={{flex:1}}>
 
@@ -50,21 +56,21 @@ const Profile = ({navigation}) => {
                     <Text style={{paddingLeft:5}}>
                         Name
                     </Text>
-                    <TextInput value={"Haris"} placeholder=""  onChangeText={()=>{}} style={styles.input} />
+                    <TextInput value={name} placeholder=""  onChangeText={setName} style={styles.input} />
                 </View>
 
                 <View style={styles.inputContainer} >
                     <Text style={{paddingLeft:5}}>
                         Email
                     </Text>
-                    <TextInput value={"Haris"} placeholder=""  onChangeText={()=>{}} style={styles.input} />
+                    <TextInput value={email} placeholder=""  onChangeText={setemail} style={styles.input} />
                 </View>
 
                 <View style={styles.inputContainer} >
                     <Text style={{paddingLeft:5}}>
                         Phone#
                     </Text>
-                    <TextInput value={"Haris"} placeholder=""  onChangeText={()=>{}} style={styles.input} />
+                    <TextInput value={phone} placeholder=""  onChangeText={setphone} style={styles.input} />
                 </View>
                 
    

@@ -1,10 +1,9 @@
 import React from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import COLORS from './../consts/color';
-import { Feather, Entypo } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 
-const TopSalons = ({salon}) => {
-    console.log("Top Salons", salon.item.image)
+const SmallCards = ({salon, selectedRemover}) => {
     return (
         <View style={styles.topHotelCard}>
           <View
@@ -16,24 +15,24 @@ const TopSalons = ({salon}) => {
               flexDirection: 'row',
             }}>
             
-            <TouchableOpacity style={{}} onPress={()=>{}}>
-                <Entypo name="heart-outlined" size={30} color={COLORS.primary}  />
+            <TouchableOpacity onPress={()=>selectedRemover(salon)} >
+                  <Feather name="minus-circle" size={24} color={COLORS.white} style={{padding:4}} />
             </TouchableOpacity>
           </View>
           <Image style={styles.topHotelCardImage}   
-                    source={{uri: `${salon.item.image}`}} s
+                  source={{uri:salon.image}}
                   resizeMode="cover" />
           <View style={{paddingVertical: 5, paddingHorizontal: 10}}>
-            <Text style={{fontSize: 10, fontWeight: 'bold'}}>{salon?.item.name}</Text>
-            <Text style={{fontSize: 7, fontWeight: 'bold', color: 'black'}}>
-              {salon.item.description}
+            <Text style={{fontSize: 10, fontWeight: 'bold'}}>{salon?.name}</Text>
+            <Text style={{fontSize: 7, fontWeight: 'bold', color: COLORS.grey}}>
+              {salon.description}
             </Text>
           </View>
         </View>
       );
 }
 
-export default TopSalons
+export default SmallCards
 
 const styles = StyleSheet.create({
     topHotelCard: {

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { StyleSheet, Text, View, ActivityIndicator, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator, Dimensions, ScrollView} from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { Avatar } from 'react-native-elements';
 import COLORS from '../consts/color';
@@ -48,7 +48,7 @@ const ReviewAndRating = ({route,navigation}) => {
                 <ActivityIndicator size="large" color={COLORS.primary} /> 
             </View>
             :
-            <View>
+            <ScrollView>
 
                 <View style={{justifyContent:"center", alignItems:"center", marginTop:15}}>
                     <Text style={{fontSize:18, fontWeight:"bold"}}>Review and Rating</Text>
@@ -60,14 +60,14 @@ const ReviewAndRating = ({route,navigation}) => {
                 </View>
                 {reviews?.map((item,index)=>{
                     return (
-                        <View key={index} style={{backgroundColor:COLORS.gray, marginHorizontal:20, borderRadius:8, paddingVertical:20}}>
+                        <View key={index} style={{backgroundColor:COLORS.gray, marginHorizontal:20, borderRadius:8, paddingVertical:20, marginVertical:5}}>
                         <View style={{ flexDirection:"row", justifyContent:"space-between", alignItems:"center",marginHorizontal:10}}>
                                 <View style={{flexDirection:"row", justifyContent:"space-between", alignItems:"center"}}>
                                     <Avatar
                                         rounded
                                         icon={{name: 'user', type: 'font-awesome'}}
                                         activeOpacity={0.7}
-                                        containerStyle={{backgroundColor:"white"}}
+                                        containerStyle={{backgroundColor:"black"}}
                                     />
                                     <Text style={{marginLeft:10}}>
                                         {item.user_id.name}
@@ -92,7 +92,7 @@ const ReviewAndRating = ({route,navigation}) => {
                         </View>
                     )
                 })}
-            </View>
+            </ScrollView>
             }
         </>
     )

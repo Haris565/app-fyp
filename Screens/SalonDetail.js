@@ -19,6 +19,7 @@ import { Pressable } from 'react-native';
 
 
 
+
 const SalonDetail = ({route, navigation}) => {
 
     const [isVisible, setisVisible] = useState(false)
@@ -82,6 +83,29 @@ const SalonDetail = ({route, navigation}) => {
 
     }
 
+    const chatHandler = async () => {
+        console.log("into chat ", selectedSalon._id)
+        try {
+            let data = {
+                receiverId: selectedSalon._id
+            }
+          
+            const res = await axios.post(`http://${local_ip}:5000/api/user/createConversation`, data);
+            if(res.data){
+                navigation.navigate("chatroom", {
+                    data: res.data,
+                    receiver:selectedSalon
+
+                })
+            }
+            console.log(res.data)
+        }
+        catch(err){
+            console.log(err)
+        }
+ 
+        
+    }
 
     const onUnchecked = (title) => {
         const updatedState = service.filter((item)=>item.title!==title)
@@ -177,7 +201,7 @@ const SalonDetail = ({route, navigation}) => {
                             {selectedSalon.name}
                         </Text>
                         <View style={{flexDirection:"row"}}>
-                                <TouchableOpacity style={{marginRight:20, borderRadius:20, padding:8}}>
+                                <TouchableOpacity style={{marginRight:20, borderRadius:20, padding:8}} onPress={chatHandler} >
                                     <Entypo name="chat" size={24} color={COLORS.dark} />
                                 </TouchableOpacity>
                                 <TouchableOpacity style={{marginRight:20, borderRadius:20, padding:8}} 
@@ -239,7 +263,7 @@ const SalonDetail = ({route, navigation}) => {
             <View style={{}}>
                 {selectedSalon?.services?.map((item,index)=>{
                    return(
-                       <View key={index} style={{backgroundColor:COLORS.white, marginTop:10, marginHorizontal:15, borderRadius:10,
+                       <View key={index} style={{backgroundColor:COLORS.grey, marginTop:10, marginHorizontal:15, borderRadius:10,
                         shadowColor: "#000",
                         shadowOffset: {
                             width: 0,
@@ -247,8 +271,9 @@ const SalonDetail = ({route, navigation}) => {
                         },
                         shadowOpacity: 0.20,
                         shadowRadius: 1.41,
-                        
-                        elevation: 2,}}>
+                        elevation: 2,
+                        padding:10
+                        }}>
                            <CheckBox  title={item.service} price={item.price} checked={checked} onPress={()=>handleServieBox(item.service, item.price)} unchecked={()=>{onUnchecked(item.name)}} />
                        </View>
                        
@@ -270,7 +295,10 @@ const SalonDetail = ({route, navigation}) => {
                             shadowOpacity: 0.20,
                             shadowRadius: 1.41,
                             
-                            elevation: 2
+                            elevation: 2,
+                            paddingVertical:40,
+                            alignItems:"center",
+                            
                         }: {backgroundColor:COLORS.white, padding:12, marginTop:25, marginHorizontal:15, borderRadius:5,
                             shadowColor: "#000",
                             shadowOffset: {
@@ -280,8 +308,11 @@ const SalonDetail = ({route, navigation}) => {
                             shadowOpacity: 0.20,
                             shadowRadius: 1.41,
                             
-                            elevation: 2
+                            elevation: 2,
+                            paddingVertical:40,
+                            alignItems:"center"
                         } }>
+                            <Entypo name="calendar" size={24} color="black" style={{marginBottom:10}} />
                             <Text style={(date===item)?{color:COLORS.white}:{color:COLORS.dark}}>
                                 {item.split("T")[0]}
                             </Text>
@@ -289,13 +320,14 @@ const SalonDetail = ({route, navigation}) => {
                         </TouchableOpacity>
                     )
                 })}
+         
                 
             </ScrollView>
 
-            <TouchableOpacity style={styles.btnPrimary} opacity={0.9} onPress={submitHandler} >
+            <TouchableOpacity style={styles.btnPrimary} opacity={0.9} onPress={()=>navigation.navigate("Payment")} >
                 {loading ? <ActivityIndicator size="large" color={COLORS.white} /> :
                 <Text style={{color:COLORS.white, fontSize:16, fontWeight:'bold'}}>
-                    BOOK NOW
+                    Continue to payment
                 </Text>
                 }
             </TouchableOpacity>

@@ -5616,6 +5616,13 @@ react-native-codegen@^0.0.6:
     jscodeshift "^0.11.0"
     nullthrows "^1.1.1"
 
+react-native-comparison-table@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-comparison-table/-/react-native-comparison-table-1.0.0.tgz#e8b7b1c20ea0698d810f9c14a4439a08a278d094"
+  integrity sha512-cV5+jZ1YHbdfq7jKneX5VuVR8FexKEjqBaaafeRgPXtWHVSgDi7TrJB4RWNgykm8s9c0rxEhR/AIMTOON6OBeQ==
+  dependencies:
+    lodash.get "^4.4.2"
+
 react-native-element@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/react-native-element/-/react-native-element-1.2.1.tgz#02165505422e2521a58e5c1d6845af67fcf3b04b"
@@ -5704,6 +5711,11 @@ react-native-svg@12.1.1:
   dependencies:
     css-select "^2.1.0"
     css-tree "^1.0.0-alpha.39"
+
+react-native-toast-message@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.0.2.tgz#68f2396735e2f4ca9e290ca6a63d03d601a4a140"
+  integrity sha512-jjHRgK4o388WTfikoJ2D/EWtnrXKOW8YvpSBMENRG/QwK9C6SUWZ2zas/lpP634IMUbS1VuKwtQqpNXoJIAHwg==
 
 react-native-web@0.17.1:
   version "0.17.1"

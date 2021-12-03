@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import axios from "axios"
 import { fetchSalons } from '../redux/actions/salon';
 import { local_ip } from '../consts/ip';
+import TopSalons from './../Components/TopSalons';
 
 const Home = ({navigation }) => {
 
@@ -114,10 +115,15 @@ const Home = ({navigation }) => {
                     </View>
 
                     <FlatList
-                        data={salons}
-                        renderItem={(item)=><Card items={item} />}
-                        keyExtractor={item=>item.id}
+                        data={salon.salons}
+                        renderItem={(item)=><TopSalons salon={item} />}
+                        keyExtractor={item=>item._id}
                         horizontal
+                        contentContainerStyle={{
+                               
+                            marginTop: 20,
+                            paddingBottom: 30,
+                        }}
                         showsHorizontalScrollIndicator={false}
                         
 

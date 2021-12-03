@@ -148,7 +148,7 @@ const SearchScreen = ({navigation}) => {
                             //  renderItem={()=>console.log("Hllo")}/> 
                             <SearchCard item={selected} />
                             :
-                            <View style={{flex:1, justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
+                            <View style={{justifyContent:"center", alignItems:"center", top:windowHeight/5 }}>
                                 <MaterialIcons name="search-off" size={70} color={COLORS.primary} />
                                 <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didn't search anything</Text>
                             </View>
@@ -156,7 +156,7 @@ const SearchScreen = ({navigation}) => {
                             : 
                             selected ?    <SearchCard item={selected} />
                             : 
-                            <View style={{flex:1, justifyContent:"center", alignItems:"center",  top:windowHeight/3 }}>
+                            <View style={{ justifyContent:"center", alignItems:"center",  top:windowHeight/5 }}>
                                 <MaterialIcons name="search-off" size={70} color={COLORS.primary} />
                                 <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didn't search anything</Text>
                             </View>

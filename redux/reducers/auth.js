@@ -16,7 +16,8 @@ const initialState = {
     token:null,
     isAuthenticated: null,
     loading:false,
-    user:null
+    user:null,
+    errors:null
 }
 
 
@@ -55,13 +56,15 @@ export default function (state=initialState , action){
                 ...state,
                 isAuthenticated:false,
                 loading:false,
-                token:null
+                token:null,
+                errors:payload
             }
         case LOGIN_ATTEMPT:
         case REGISTER_ATTEMPT:
             return {
                 ...state,
-                loading:true
+                loading:true,
+                errors:null
             }
             
         default:

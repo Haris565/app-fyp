@@ -169,7 +169,7 @@ export const register =  (name, email, password, phone)=> async dispatch=>{
     dispatch({
         type: REGISTER_FAIL
     })
-    console.log("api call unsucessfull",err);
+    console.log("api call unsucessfull",err.response.data.errors);
    }
 } 
 
@@ -197,9 +197,10 @@ export const login = (email, password)=> async (dispatch) =>{
         dispatch(loadUser())
        }
        catch(err){
-        console.log("api call unsucessfull",err);
+        console.log("api call unsucessfull",err.response.data.errors);
         dispatch({
-            type: LOGIN_FAIL
+            type: LOGIN_FAIL,
+            payload: err.response.data.errors
         })
     
        }

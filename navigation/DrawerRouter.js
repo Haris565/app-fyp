@@ -15,6 +15,7 @@ import StackRoute from './StackRoute';
 import StackAuth from './StackAuth';
 import DrawerContent from "./DrawerContent";
 import { AntDesign, Feather, Foundation, MaterialIcons, MaterialCommunityIcons} from '@expo/vector-icons';
+
 import setAuthToken from "../util/setAuthToken";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Notifications from '../Screens/Notifications'
@@ -29,6 +30,7 @@ import {loadUser} from '../redux/actions/auth'
 import {register} from '../redux/actions/auth';
 import ChatScreen from '../Screens/ChatScreen';
 import Nearby from '../Screens/Nearby';
+import Compare from './../Screens/Compare';
 
 
 const Drawer = createDrawerNavigator();
@@ -112,6 +114,15 @@ function DrawerRouter() {
                 drawerIcon: ({focused, size}) => (
                     <MaterialCommunityIcons name="google-nearby" size={24} color={focused ? COLORS.white : COLORS.primary} />
                     // <Feather name="user" size={24}  />
+                ),
+                }}
+            />
+
+            <Drawer.Screen name="Compare" component={Compare} 
+                options={{
+                drawerIcon: ({focused, size}) => (
+                    <MaterialIcons name="compare-arrows"  size={24} color={focused ? COLORS.white : COLORS.primary} />
+                    
                 ),
                 }}
             />

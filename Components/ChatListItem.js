@@ -7,6 +7,7 @@ import {
   StyleSheet
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { Avatar } from 'react-native-elements';
 
 
 const ChatListItem = () => {
@@ -23,10 +24,11 @@ const ChatListItem = () => {
 
 
   return (
-    <TouchableWithoutFeedback >
+    <TouchableWithoutFeedback onPress={()=>navigation.navigate("chatroom")} >
       <View style={styles.container}>
         <View style={styles.lefContainer}>
           <Image source={{ uri: 'image' }} style={styles.avatar}/>
+          
 
           <View style={styles.midContainer}>
             <Text style={styles.username}>Haris</Text>

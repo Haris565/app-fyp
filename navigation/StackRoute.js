@@ -13,6 +13,9 @@ import { Ionicons, FontAwesome5, MaterialIcons } from '@expo/vector-icons';
 import SalonDetail from '../Screens/SalonDetail'
 import ReviewAndRating from './../Screens/ReviewAndRating';
 import AddReview from './../Screens/AddReview';
+import ComparedResults from '../Screens/ComparedResults';
+import Payment from '../Screens/Payment';
+import ChatRoomScreen from '../Screens/ChatRoom';
 
 
 
@@ -121,6 +124,49 @@ const StackRoute = ({navigation}) => {
         />
 
         <Stack.Screen name="addReview" component={AddReview}
+          options={{
+          headerStyle:{backgroundColor: COLORS.primary},
+          headerTintColor:COLORS.white,
+          headerShown: true,
+          title:'',
+          headerLeft:(() =>
+            <TouchableOpacity >
+                <MaterialIcons name="arrow-back-ios" size={28} color="white" style={{marginLeft:10}} onPress={()=>{navigation.goBack()}} />
+            </TouchableOpacity>),
+
+          }}
+        />
+
+        <Stack.Screen name="ComparedResults" component={ComparedResults}
+          options={{
+          headerStyle:{backgroundColor: COLORS.primary},
+          headerTintColor:COLORS.white,
+          headerShown: true,
+          title:'',
+          headerLeft:(() =>
+            <TouchableOpacity >
+                <MaterialIcons name="arrow-back-ios" size={28} color="white" style={{marginLeft:10}} onPress={()=>{navigation.goBack()}} />
+            </TouchableOpacity>),
+
+          }}
+        />
+
+        
+        <Stack.Screen name="Payment" component={Payment}
+          options={{
+          headerStyle:{backgroundColor: COLORS.primary},
+          headerTintColor:COLORS.white,
+          headerShown: true,
+          title:'',
+          headerLeft:(() =>
+            <TouchableOpacity >
+                <MaterialIcons name="arrow-back-ios" size={28} color="white" style={{marginLeft:10}} onPress={()=>{navigation.goBack()}} />
+            </TouchableOpacity>),
+
+          }}
+        />
+
+        <Stack.Screen name="chatroom" component={ChatRoomScreen}
           options={{
           headerStyle:{backgroundColor: COLORS.primary},
           headerTintColor:COLORS.white,

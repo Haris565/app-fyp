@@ -1,11 +1,11 @@
-import React , {useState} from 'react'
+import React , {useState, useEffect} from 'react'
 import {StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, SafeAreaView, Platform,ActivityIndicator } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { AntDesign } from '@expo/vector-icons';
 import COLORS from '../consts/color';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Toast from 'react-native-toast-message';
 import {login} from '../redux/actions/auth';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -17,6 +17,7 @@ const Login = ({navigation}) => {
 
     
     const loading = useSelector(state => state.auth.loading)
+    const errors = useSelector(state => state.auth.errors)
     const dispatch = useDispatch()
 
 
@@ -24,6 +25,20 @@ const Login = ({navigation}) => {
         console.log(email, password);
         dispatch(login(email, password))
     }
+
+
+    useEffect(() => {
+        if(errors){
+            errors.map((item,index)=>
+            Toast.show({
+                type: 'error',
+                text1: `${item.msg}`,
+                
+              })
+            )
+       
+        }
+    }, [errors])
 
     //     const user= {
     //         email:email,
@@ -50,6 +65,10 @@ const Login = ({navigation}) => {
     return (
  
         <KeyboardAvoidingView behavior="height"  style={{paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white} }>
+                <Toast
+                    position='top'
+                    bottomOffset={20}
+                />
             <StatusBar style= "light" />
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{flexDirection: 'row', marginTop: 30 , alignItems:'center'}}>
@@ -83,7 +102,7 @@ const Login = ({navigation}) => {
 
                         <View style={{ }}>
                             <View style={STYLES.inputContainer}>
-                                <AntDesign name="lock" size={20} color="#A9A9A9" style={STYLES.inputIcon} />
+                                <AntDesign name="lock" size={22} color="#A9A9A9" style={STYLES.inputIcon} />
                                 <TextInput placeholder="Password" onChangeText={setpassword} value={password} type='password' placeholderTextColor='#A9A9A9'  secureTextEntry style={STYLES.input} />
                             </View>
                         </View>
