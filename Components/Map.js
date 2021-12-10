@@ -6,6 +6,7 @@ import MapView,{Marker,Polyline} from 'react-native-maps';
 import { Entypo } from '@expo/vector-icons';
 import { mapStyle } from '../consts/mapStyle';
 import COLORS from '../consts/color';
+import sizer from "../assets/scissors.png"
 
 
 
@@ -23,8 +24,7 @@ const Map = ({coords}) => {
 
 
     useEffect(() => {
-      setInitial({latitude:coords[0] , longitude:coords[1], latitudeDelta: 1.8,
-        longitudeDelta: 1.8,});
+      setInitial({latitude:coords[0] , longitude:coords[1],latitudeDelta:LATITUDE_DELTA,longitudeDelta:LONGITUDE_DELTA,});
       setMarker({latitude:coords[0] , longitude:coords[1]})
     }, [])
     
@@ -81,7 +81,10 @@ const Map = ({coords}) => {
         coordinate={marker}
         resizeMethod="contain"
         >
-          <Entypo name="location-pin" size={30} color={COLORS.primary} />
+             <Image
+                  style={{height:40,width:40}}
+                  source={sizer}
+              />
     </Marker>
     
     

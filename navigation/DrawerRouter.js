@@ -39,13 +39,14 @@ const Drawer = createDrawerNavigator();
 
 function DrawerRouter() {
     const auth = useSelector(state => state.auth.isAuthenticated)
+    const user = useSelector(state => state.auth.user)
     console.log(auth)
 
 
     return (
-        (auth) ?
+       
         
-        (<NavigationContainer>
+        <NavigationContainer>
             <Drawer.Navigator initialRouteName={StackRoute} drawerContent={(props)=><DrawerContent {...props} />} drawerContentOptions={{
             activeTintColor: 'white',
             activeBackgroundColor: COLORS.primary,
@@ -126,23 +127,22 @@ function DrawerRouter() {
                 ),
                 }}
             />
-            <Drawer.Screen name="Logout" component={Profile} 
+            {/* <Drawer.Screen name="Logout" 
                 options={{
                 drawerIcon: ({focused, size}) => (
                     // <Feather name="user" size={24}  />
                     <AntDesign name="logout" size={24} color={focused ? COLORS.white : COLORS.primary} />
                 ),
                 }}
-            />
+            /> */}
 
             </Drawer.Navigator>
 
             
 
-        </NavigationContainer>):
+        </NavigationContainer>)
         
-        (<StackAuth />) 
-    )
+   
 }
 
 

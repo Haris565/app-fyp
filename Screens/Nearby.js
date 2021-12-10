@@ -12,9 +12,13 @@ import { mapStyle } from '../consts/mapStyle';
 import { Pressable } from 'react-native';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
+import Constants from 'expo-constants';
+import * as Location from 'expo-location';
+import sizer from "../assets/scissors.png"
 
 const Nearby = () => {
-
+    const [location, setLocation] = useState(null);
+    const [errorMsg, setErrorMsg] = useState(null);
     const coords = [33.6254994,73.0616463] 
     const [loading, setloading] = useState(true)
     const {width, height} = Dimensions.get('window')
@@ -28,7 +32,7 @@ const Nearby = () => {
 
     const navigation = useNavigation()
     const flatlist = useRef();
-    const map = useRef();
+    const mapRef = useRef();
  
 
     const viewConfig = useRef({itemVisiblePercentThreshold: 70})
@@ -39,25 +43,74 @@ const Nearby = () => {
         console.log("viewable",viewableItems)
         if (viewableItems.length > 0) {
         const selectedPlace = viewableItems[0].item;
-        console.log("selected", selectedPlace)
+        // console.log("selected", selectedPlace)
         setSelectedPlaceId(selectedPlace._id)
         }
     })
 
 
     useEffect(() => {
-        axios.request({
-            method: 'GET',
-            url: `http://${local_ip}:5000/api/user/getNearBySalons`,
-          
-            }).then((res)=>{ 
-                console.log("nearby", res.data);
-                setnearby(res.data)
-                setloading(false)
-              }).catch((err)=>{
-                    console.log(err)
-              })
-    }, [])
+        if(location && location.length > 0){
+            let payload = {
+                location: location
+              }
+            console.log("body=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", payload)
+            axios.request({
+                method: 'GET',
+                url: `http://${local_ip}:5000/api/user/getNearBySalons?lat=${location[0]}&long=${location[1]}`,
+                data:payload
+                }).then((res)=>{ 
+                 
+                    setnearby(res.data)
+                    setloading(false)
+                  }).catch((err)=>{
+                        console.log(err)
+                  })
+        }
+        
+
+    }, [location])
+
+
+    useEffect(() => {
+        (async () => {
+          if (Platform.OS === 'android' && !Constants.isDevice) {
+            setErrorMsg(
+              'Oops, this will not work on Snack in an Android emulator. Try it on your device!'
+            );
+            return;
+          }
+          let { status } = await Location.requestForegroundPermissionsAsync();
+          if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
+          }
+    
+          let loc = await Location.getCurrentPositionAsync({});
+          setLocation([loc?.coords?.latitude, loc?.coords?.longitude]);
+        //   if(location && location.length > 0){
+           
+        //     console.log("body=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>",location[0])
+            // axios.request({
+            //     method: 'GET',
+            //     url: `http://${local_ip}:5000/api/user/getNearBySalons?lat=${location[0]}&long=${location[1]}`
+
+               
+            //     }).then((res)=>{ 
+                 
+            //         setnearby(res.data)
+            //         setloading(false)
+            //       }).catch((err)=>{
+            //             console.log(err)
+
+            //       })
+ 
+ 
+        })();
+      }, []);
+
+
+  
 
 
     useEffect(() => {
@@ -74,7 +127,7 @@ const Nearby = () => {
           latitudeDelta: 0.8,
           longitudeDelta: 0.8,
         }
-        map.current.animateToRegion(region);
+        mapRef.current.animateToRegion(region, 1000);
       }, [selectedPlaceId])
   
     // useEffect(() => {
@@ -116,6 +169,7 @@ const Nearby = () => {
     // } else if (location) {
     //   text = JSON.stringify(location);
     // }
+
     if(loading){
         return (
             <View>
@@ -126,13 +180,22 @@ const Nearby = () => {
   
     return (
         <View style={{flex:1}}>
+            
             {initial ? 
                 <MapView
-                    ref={map}
+                    ref={mapRef}
                     style={styles.map}
                     initialRegion={initial}
                     customMapStyle={mapStyle}
                 >
+                            <Marker
+                                coordinate={{ latitude: location[0],longitude: location[1]}}
+                                resizeMethod="contain"
+                               
+                            >
+                               <Entypo name="user" size={34} color={COLORS.primary} />
+                                
+                            </Marker>
                     {nearby?.map((item,index)=>{
                         return(
                             <Marker
@@ -140,8 +203,16 @@ const Nearby = () => {
                                 resizeMethod="contain"
                                 key={index}
                             >
-                                {item._id === selectedPlaceId ? <Entypo name="location-pin" size={54} color={COLORS.primary} /> : 
-                                <Entypo name="location-pin" size={40} color={COLORS.dark} /> }
+                                {item._id === selectedPlaceId ? 
+                                  <Image
+                                        style={{height:50,width:50,}}
+                                        source={sizer}
+                                    /> 
+                                    : 
+                                   <Image
+                                        style={{height:40,width:40}}
+                                        source={sizer}
+                                    /> }
                                 
                             </Marker>
                         )

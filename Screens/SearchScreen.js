@@ -7,26 +7,41 @@ import { Ionicons, MaterialIcons, FontAwesome5, Entypo, AntDesign, EvilIcons } f
 import SearchCard from '../Components/SearchCard';
 import { useSelector, useDispatch } from 'react-redux';
 import MapScreen from './MapScreen';
-import { Dimensions } from 'react-native';
+import { Dimensions} from 'react-native';
+import  axios from 'axios';
+import { local_ip } from './../consts/ip';
 
 
 const SearchScreen = ({navigation}) => {
     
     const [inputValue, setinputValue] = useState('');
     const [selected, setselected] = useState(null)
+    const [byService, setbyService] = useState(null)
     const [search, setsearch] = useState({
         searchByName:true,
         searchByLoc:false
     })
     const windowWidth = Dimensions.get('window').width;
     const windowHeight = Dimensions.get('window').height;
-    const salons = useSelector(state => state.salon.salons)
 
-    const searchHandler = () => {
-        console.log(salons)
-        const searchSalons = salons.find((item) => item.name === inputValue)
-        console.log("Searched Salon", searchSalons)
-        setselected(searchSalons);
+    const searchHandler = async () => {
+     try{
+        if(search.searchByName){
+            let res = await axios.get(`http://${local_ip}:5000/api/user/searchSalon/${inputValue}?type=name`)
+            setselected(res.data)
+            setbyService(null)
+            
+        }
+        if(search.searchByLoc){
+            let res = await axios.get(`http://${local_ip}:5000/api/user/searchSalon/${inputValue}?type=service`)
+            setbyService(res.data)
+            setselected(null)
+        
+        }
+     }
+     catch(err){
+         console.log(err)
+     }
     }
     
     return (
@@ -110,7 +125,7 @@ const SearchScreen = ({navigation}) => {
                         </TouchableOpacity>) 
                     :
 
-                     (<TouchableOpacity style={{backgroundColor: COLORS.primary, padding: 8, borderRadius:20}}>
+                     (<TouchableOpacity onPress={searchHandler} style={{backgroundColor: COLORS.primary, padding: 8, borderRadius:20}}>
                         <Ionicons name="search" size={20} color={COLORS.white} />
                         
                     </TouchableOpacity>)
@@ -142,23 +157,24 @@ const SearchScreen = ({navigation}) => {
                 <View>
 
                     {search.searchByName ? 
-                            selected ?
+                            selected && selected.length > 0 ?
                             //  <FlatList
                             //  data={selected}
                             //  renderItem={()=>console.log("Hllo")}/> 
-                            <SearchCard item={selected} />
+                            selected?.map((item, index)=> <SearchCard item={item} key={index} /> )
+                            
                             :
                             <View style={{justifyContent:"center", alignItems:"center", top:windowHeight/5 }}>
                                 <MaterialIcons name="search-off" size={70} color={COLORS.primary} />
-                                <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didn't search anything</Text>
+                                <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You dont have any search results</Text>
                             </View>
                             
                             : 
-                            selected ?    <SearchCard item={selected} />
+                            byService && byService.length > 0 ?    byService?.map((item, index)=> <SearchCard item={item} key={index} /> )
                             : 
                             <View style={{ justifyContent:"center", alignItems:"center",  top:windowHeight/5 }}>
                                 <MaterialIcons name="search-off" size={70} color={COLORS.primary} />
-                                <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didn't search anything</Text>
+                                <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You dont have any search results</Text>
                             </View>
                            
                         }

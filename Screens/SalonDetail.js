@@ -48,7 +48,11 @@ const SalonDetail = ({route, navigation}) => {
     // console.log(selectedSalon);
 
 
-
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerShown: false
+        })
+      }, [navigation]);
 
     // const createTimeSlots =(start, end)=>{
     //     let startTime = moment(start, 'HH:mm')
@@ -130,7 +134,8 @@ const SalonDetail = ({route, navigation}) => {
             appointment_date:date,
             services:service,
             salon_id: selectedSalon.user,
-            salon_profile:selectedSalon._id
+            salon_profile:selectedSalon._id,
+            total:total
 
          }
         const response = await axios.post(`http://${local_ip}:5000/api/user/booking`, booking)
@@ -323,14 +328,21 @@ const SalonDetail = ({route, navigation}) => {
          
                 
             </ScrollView>
+            <TouchableOpacity style={styles.btnPrimary} opacity={0.9} onPress={submitHandler} >
+                {loading ? <ActivityIndicator size="large" color={COLORS.white} /> :
+                <Text style={{color:COLORS.white, fontSize:16, fontWeight:'bold'}}>
+                    Booking
+                </Text>
+                }
+            </TouchableOpacity>
 
-            <TouchableOpacity style={styles.btnPrimary} opacity={0.9} onPress={()=>navigation.navigate("Payment")} >
+            {/* <TouchableOpacity style={styles.btnPrimary} opacity={0.9} onPress={()=>navigation.navigate("Payment")} >
                 {loading ? <ActivityIndicator size="large" color={COLORS.white} /> :
                 <Text style={{color:COLORS.white, fontSize:16, fontWeight:'bold'}}>
                     Continue to payment
                 </Text>
                 }
-            </TouchableOpacity>
+            </TouchableOpacity> */}
 
             {/* <BottomSheet
                

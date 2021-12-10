@@ -50,7 +50,7 @@ const AddReview = ({navigation , route}) => {
     return (
         <View style={{flex: 1, justifyContent:'center'}}>
             <View style={{alignItems:"center", alignContent:'center',}}>
-                <Text style={{fontStyle:"normal", fontSize:28, color:COLORS.light}}>{`Rate the ${data.profile_id.name} service`}</Text>
+                <Text style={{fontStyle:"normal", fontSize:28, color:COLORS.light}}>{`Rate the ${data?.profile_id?.name} service`}</Text>
             </View>
 
             

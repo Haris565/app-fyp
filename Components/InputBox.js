@@ -12,11 +12,12 @@ import {
 import COLORS from '../consts/color';
 import { local_ip } from './../consts/ip';
 import axios  from 'axios';
+import { useSelector } from 'react-redux';
 
-const InputBox = ({conversationId,sender}) => {
-  console.log(conversationId, sender)
+const InputBox = ({conversationId,sender, stateHandler,chat, socket}) => {
+ 
   const [message, setMessage] = useState('');
-
+  const user = useSelector(state => state.auth.user)
   const onMicrophonePress = () => {
     console.warn('Microphone')
   }
@@ -29,9 +30,17 @@ const InputBox = ({conversationId,sender}) => {
         sender,
         text:message
       }
+      const receiverId = chat?.members.find((member)=>member!==user._id)
       console.log(body)
       let res =await axios.post(`http://${local_ip}:5000/api/user/sendMessage`, body)
+      socket?.current.emit('sendMessage', {
+        senderId: user._id,
+        receiverId: receiverId,
+        text:message
+    })
       console.log(res.data)
+      stateHandler(res.data)
+
     }
     catch(err){
       console.log(err)

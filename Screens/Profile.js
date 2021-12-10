@@ -1,10 +1,13 @@
 import React, {useState} from 'react'
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView} from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView, ActivityIndicator} from 'react-native'
 import { Avatar, Header, Input} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import COLORS from "../consts/color";
 import { AntDesign } from '@expo/vector-icons';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { local_ip } from './../consts/ip';
+import { loadUser } from '../redux/actions/auth';
 
 
 
@@ -18,11 +21,31 @@ const Left = ({navigation}) =>{
 
 const Profile = ({navigation}) => {
     const user = useSelector(state => state.auth.user)
+    const dispatch = useDispatch()
     console.log(user)
 
-    const [name, setName] = useState(user.name)
-    const [email, setemail] = useState(user.email)
-    const [phone, setphone] = useState(user.number)
+    const [name, setName] = useState(user?.name)
+    const [email, setemail] = useState(user?.email)
+    const [phone, setphone] = useState(user?.number)
+    const [loading, setloading] = useState(false)
+
+    const submitHandler = async () => {
+        let body=  {
+            name:name,
+            email:email,
+            number:phone
+        }
+        try{
+            setloading(true)
+            let res = await axios.post(`http://${local_ip}:5000/api/user/updateProfile`, body)
+            console.log(res)
+            dispatch(loadUser())
+            setloading(false)
+        }
+        catch(err){
+            console.log(err)
+        }
+    }
     return (
         <View style={{flex:1}}>
 
@@ -77,8 +100,13 @@ const Profile = ({navigation}) => {
 
                 <View style={{ justifyContent:'center', alignItems:'center', marginBottom: 20, flex:1
                 }}>
-                        <TouchableOpacity style={styles.btnPrimary} activeOpacity={0.8}>
-                                <Text style={{color:'#fff', fontWeight: 'bold', fontSize: 18}}>Update</Text>
+                        <TouchableOpacity style={styles.btnPrimary} activeOpacity={0.8} onPress={submitHandler}>
+                            {loading ?
+                              <ActivityIndicator size="large" color="#fff" />
+                            :
+                            <Text style={{color:'#fff', fontWeight: 'bold', fontSize: 18}}>Update</Text>
+                            }
+                                
                         </TouchableOpacity>
                 </View>
 

@@ -26,3 +26,5 @@ export const ATTEMPT= 'ATTEMPT';
 
 export const FETCH_REVIEWS = "FETCH_REVIEWS";
 export const FETCH_REVIEW_FAIL = "FETCH_REVIEW_FAIL"
+
+export const LOGOUT = "LOGOUT"

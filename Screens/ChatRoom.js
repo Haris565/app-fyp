@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import { FlatList, Text, ImageBackground, KeyboardAvoidingView, View, Dimensions } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import BG from '../assets/BG.png';
@@ -8,33 +8,80 @@ import COLORS from './../consts/color';
 import { useSelector } from 'react-redux';
 import { local_ip } from './../consts/ip';
 import axios  from 'axios';
+import {io} from "socket.io-client"
 
 
 
 const ChatRoomScreen = () => {
       const [messages, setMessages] = useState([]);
+      const [arrivedmsg, setarrivedmsg] = useState()
       const user = useSelector(state => state.auth.user)
       const route = useRoute()
+      const data = route.params.data
       console.log("user_id",user._id)
-    
+      const socket = useRef()
+      const scrollRef = useRef();
+      const isMountedRef = useRef(null);
+
+
+      useEffect(() => {
+        socket.current = io(`http://${local_ip}:5000/`)
+            socket.current.on("getMessage",({senderId, text})=>{
+              console.log("into the get", senderId,)
+
+              setarrivedmsg(
+                  {
+                      sender:senderId,
+                      text:text,
+                      createdAt: Date.now(),
+                  }
+              )
+              console.log("into the get")
+          })
+        }, []) 
+
+
+        useEffect(() => {
+          if(arrivedmsg) setMessages((prev)=>[...prev, arrivedmsg ])
+      }, [arrivedmsg])
+
+        useEffect(() => {
+          socket.current.emit("addUser", user._id);
+          // socket.current.on("getUsers", (users)=>{
+          //     console.log(users)
+          // })
+       
+      }, [user])
+
+      
+
 
 
 
       useEffect(() => {
-        (async () => {
+        // (async () => {
         
-          try {
-            let res = await axios.get(`http://${local_ip}:5000/api/user/getMessage/${route.params.data._id}`)
-            console.log("res", res.data)
-            setMessages(res.data)
-          }
-          catch(err){
-            console.log(err)
-          }
+        //   try {
+        //     let res = await axios.get(`http://${local_ip}:5000/api/user/getMessage/${data._id}`)
+        //     console.log("res", res.data)
+        //     setMessages(res.data)
+        //   }
+        //   catch(err){
+        //     console.log(err)
+        //   }
+        // })
+        // ()
+        isMountedRef.current = true;
+        axios.get((`http://${local_ip}:5000/api/user/getMessage/${data._id}`)).then((res)=>{
+       
+          setMessages(res.data)
+        }).catch((err)=>{
+          console.log(err)
         })
-        ()
+
+        return () => isMountedRef.current = false;
         
-      }, [])
+      }, [data])
 
 
 //   const route = useRoute();
@@ -87,6 +134,10 @@ const ChatRoomScreen = () => {
 
 //   console.log(`messages in state: ${messages.length}`)
 
+
+      const stateHandler = (msg) =>{
+          setMessages((prev)=>[...prev, msg])
+      }
   return (
     <View  style={{backgroundColor: COLORS.white,  height: '100%',
     }} >
@@ -94,10 +145,12 @@ const ChatRoomScreen = () => {
         data={messages}
         keyExtractor={(item,index)=>index}
         renderItem={({ item }) => <ChatMessage message={item} myId={user?._id} />}
-        inverted
+        ref={scrollRef}
+        onContentSizeChange={() => scrollRef.current.scrollToEnd() }
+        onLayout={() => scrollRef.current.scrollToEnd() }
       />
         
-        <InputBox conversationId={route.params.data._id} sender={user?._id} />
+        <InputBox conversationId={route.params.data._id} sender={user?._id} stateHandler={stateHandler} socket={socket} chat={data} />
         
 
    

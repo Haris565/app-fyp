@@ -140,14 +140,15 @@ export const loadUser = () => async dispatch =>{
 }
 
 
-export const register =  (name, email, password, phone)=> async dispatch=>{
+export const register =  (name, email, password, phone, city)=> async dispatch=>{
 
     const user= {
       
         name:name,
         email:email,
         password:password,
-        number:phone
+        number:phone,
+        city:city
         
    }
    console.log("From", user)
@@ -158,6 +159,7 @@ export const register =  (name, email, password, phone)=> async dispatch=>{
     }) 
     
     const res = await axios.post(`http://${local_ip}:5000/api/user/register`, user);
+    await AsyncStorage.setItem('token', res.data.token)
     dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data
@@ -167,7 +169,8 @@ export const register =  (name, email, password, phone)=> async dispatch=>{
    }
    catch(err){
     dispatch({
-        type: REGISTER_FAIL
+        type: REGISTER_FAIL,
+        payload: err.response.data.errors
     })
     console.log("api call unsucessfull",err.response.data.errors);
    }

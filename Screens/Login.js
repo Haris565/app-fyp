@@ -5,10 +5,55 @@ import { AntDesign } from '@expo/vector-icons';
 import COLORS from '../consts/color';
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 import {login} from '../redux/actions/auth';
 import { useSelector, useDispatch } from 'react-redux';
 
+const toastConfig = {
+    /*
+      Overwrite 'success' type,
+      by modifying the existing `BaseToast` component
+    */
+    success: (props) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: 'gray', backgroundColor:COLORS.primary }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: '400'
+        }}
+      />
+    ),
+    /*
+      Overwrite 'error' type,
+      by modifying the existing `ErrorToast` component
+    */
+    error: (props) => (
+      <ErrorToast
+        {...props}
+        text1Style={{
+          fontSize: 17
+        }}
+        text2Style={{
+          fontSize: 15
+        }}
+      />
+    ),
+    /*
+      Or create a completely new type - `tomatoToast`,
+      building the layout from scratch.
+  
+      I can consume any custom `props` I want.
+      They will be passed when calling the `show` method (see below)
+    */
+    tomatoToast: ({ text1, props }) => (
+      <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
+        <Text>{text1}</Text>
+        <Text>{props.uuid}</Text>
+      </View>
+    )
+  };
 
 const Login = ({navigation}) => {
 
@@ -31,7 +76,7 @@ const Login = ({navigation}) => {
         if(errors){
             errors.map((item,index)=>
             Toast.show({
-                type: 'error',
+                type: 'success',
                 text1: `${item.msg}`,
                 
               })
@@ -68,6 +113,7 @@ const Login = ({navigation}) => {
                 <Toast
                     position='top'
                     bottomOffset={20}
+                    config={toastConfig}
                 />
             <StatusBar style= "light" />
                 <ScrollView showsVerticalScrollIndicator={false}>

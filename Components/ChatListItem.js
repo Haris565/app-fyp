@@ -8,15 +8,33 @@ import {
 } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Avatar } from 'react-native-elements';
+import { useSelector } from 'react-redux';
+import axios from 'axios';
+import { local_ip } from './../consts/ip';
 
 
-const ChatListItem = () => {
+const ChatListItem = ({chat}) => {
  
+  const user = useSelector(state => state.auth.user)
+  const [profile, setprofile] = useState()
 
   const navigation = useNavigation();
 
   useEffect(() => {
-
+      
+  
+      (async () => {
+        try {
+          let profileId = chat.members.find((m)=>m!==user._id)
+          let res = await axios.get(`http://${local_ip}:5000/api/user/getChatUserDetail/${profileId}`)
+          console.log("res", res.data)
+          setprofile(res.data)
+        }
+        catch(err){
+          console.log(err)
+        }
+      })
+    ()
   }, [])
 
 
@@ -24,22 +42,26 @@ const ChatListItem = () => {
 
 
   return (
-    <TouchableWithoutFeedback onPress={()=>navigation.navigate("chatroom")} >
+    <TouchableWithoutFeedback 
+      onPress={()=>navigation.navigate("chatroom", {
+        data: chat,
+        receiver:profile
+      })} >
       <View style={styles.container}>
         <View style={styles.lefContainer}>
-          <Image source={{ uri: 'image' }} style={styles.avatar}/>
+          <Image source={{ uri: profile?.image }} style={styles.avatar}/>
           
 
           <View style={styles.midContainer}>
-            <Text style={styles.username}>Haris</Text>
-            <Text
+            <Text style={styles.username}>{profile?.name}</Text>
+            {/* <Text
               numberOfLines={2}
               style={styles.lastMessage}>
-              {/* {chatRoom.lastMessage
+              {chatRoom.lastMessage
                 ? `${chatRoom.lastMessage.user.name}: ${chatRoom.lastMessage.content}`
-                : ""} */}
+                : ""}
                 Hello 1 2 3 
-            </Text>
+            </Text> */}
           </View>
 
         </View>

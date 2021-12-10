@@ -1,5 +1,5 @@
 import React,{useEffect,useState} from 'react'
-import { StyleSheet, Text, View,Dimensions, ActivityIndicator,Alert} from 'react-native'
+import { StyleSheet, Text, View,Dimensions, ActivityIndicator,Alert, ScrollView} from 'react-native'
 import { ListItem, Avatar } from 'react-native-elements'
 import { useSelector, useDispatch } from 'react-redux'
 import { Entypo, Ionicons } from '@expo/vector-icons';
@@ -61,12 +61,12 @@ const PrevBookings = () => {
           <ActivityIndicator size="large" color={COLORS.primary} /> 
         </View> 
         :
-        <View style={{}}>
+        <ScrollView style={{marginBottom:200}}>
             {/* <View style={{marginHorizontal:15, flexDirection:"row", justifyContent:"flex-end", marginTop: 5,
             }}>
               <Ionicons name="filter" size={30} color="black" />
             </View> */}
-            {appointments && appointments.length !== 0 ? appointments.map((item,index)=>{
+            {appointments && appointments.length !== 0 ? appointments?.map((item,index)=>{
               return(
                 <View key={index} style={{backgroundColor:COLORS.gray, marginHorizontal:15, borderRadius:8, marginVertical:10}}>
            
@@ -92,13 +92,13 @@ const PrevBookings = () => {
                           </View>
                        
                           <Text style={{}}>
-                            Services: {item.services.map((i,ind)=> `${i.title}, `)}
+                            Services: {item?.services?.map((i,ind)=> `${i.title}, `)}
                           </Text>
                           <Text style={{}}>
-                          {item.profile_id.name}
+                          {item?.profile_id?.name}
                           </Text>
                           <Text style={{}}>
-                            {item.profile_id.address.address}
+                            {item?.profile_id?.address.address}
                           </Text>
                       </View>
                
@@ -120,14 +120,14 @@ const PrevBookings = () => {
               </View>
               )
             }):
-              <View style={{ justifyContent:"center", alignItems:"center", top:windowHeight/3 }}>
+            <View style={{  alignItems:"center", height:windowHeight, top:windowHeight/2.9}}>
                 <Entypo name="emoji-sad" size={70} color={COLORS.primary} />
                 <Text style={{fontSize:16, fontWeight:'bold', color:COLORS.primary}}>You didnt have any previous appointments</Text>
               </View>
             }
             
           
-        </View>
+        </ScrollView>
         }
        </>
     )

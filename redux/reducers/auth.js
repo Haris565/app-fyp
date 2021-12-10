@@ -1,4 +1,4 @@
-import {REGISTER_SUCCESS , REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_ATTEMPT, REGISTER_ATTEMPT} from "../actions/types";
+import {REGISTER_SUCCESS , REGISTER_FAIL, USER_LOADED, AUTH_ERROR, LOGIN_SUCCESS, LOGIN_FAIL, LOGIN_ATTEMPT, REGISTER_ATTEMPT, LOGOUT} from "../actions/types";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
@@ -65,6 +65,10 @@ export default function (state=initialState , action){
                 ...state,
                 loading:true,
                 errors:null
+            }
+        case LOGOUT:
+            return{
+                state:initialState
             }
             
         default:

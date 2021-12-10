@@ -1,15 +1,63 @@
-import React,{useState} from 'react'
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View, TouchableWithoutFeedback, Button, Keyboard,ScrollView, TouchableOpacity} from 'react-native'
+import React,{useEffect, useState} from 'react'
+import { KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, View, TouchableWithoutFeedback, Button, Keyboard,ScrollView, TouchableOpacity, ActivityIndicator} from 'react-native'
 import { StatusBar } from 'expo-status-bar';
-import { AntDesign, Feather } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome, Ionicons } from '@expo/vector-icons';
 import COLORS from '../consts/color';
 import axios from "axios"
 
+import SelectDropdown from "react-native-select-dropdown";
+import MultiSelect from 'react-native-multiple-select';
+import Toast, { BaseToast, ErrorToast } from 'react-native-toast-message';
 
 import {register} from '../redux/actions/auth';
 import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-
+const toastConfig = {
+    /*
+      Overwrite 'success' type,
+      by modifying the existing `BaseToast` component
+    */
+    success: (props) => (
+      <BaseToast
+        {...props}
+        style={{ borderLeftColor: 'gray', backgroundColor:COLORS.primary }}
+        contentContainerStyle={{ paddingHorizontal: 15 }}
+        text1Style={{
+          fontSize: 15,
+          fontWeight: '400'
+        }}
+      />
+    ),
+    /*
+      Overwrite 'error' type,
+      by modifying the existing `ErrorToast` component
+    */
+    error: (props) => (
+      <ErrorToast
+        {...props}
+        text1Style={{
+          fontSize: 17
+        }}
+        text2Style={{
+          fontSize: 15
+        }}
+      />
+    ),
+    /*
+      Or create a completely new type - `tomatoToast`,
+      building the layout from scratch.
+  
+      I can consume any custom `props` I want.
+      They will be passed when calling the `show` method (see below)
+    */
+    tomatoToast: ({ text1, props }) => (
+      <View style={{ height: 60, width: '100%', backgroundColor: 'tomato' }}>
+        <Text>{text1}</Text>
+        <Text>{props.uuid}</Text>
+      </View>
+    )
+  };
 
 const Signup = ({navigation}) => {
 
@@ -17,11 +65,38 @@ const Signup = ({navigation}) => {
     const [email, setemail] = useState('');
     const [password, setpassword] = useState('');
     const [phone, setphone] = useState("")
+    const [city, setcity] = useState('')
+
+
+    const loading = useSelector(state => state.auth.loading)
+    const errors = useSelector(state => state.auth.errors)
+    
+    
+    useEffect(() => {
+        if(errors){
+            errors.map((item,index)=>
+            Toast.show({
+                type: 'success',
+
+                text1: `${item.msg}`,
+                
+              })
+            )
+       
+        }
+    }, [errors])
+
+    const onSelectedItemsChange = selectedItems => {
+        setselectedItems((prev)=>[...prev, {setselectedItems}])
+      };
+
+     const countries = ["Rawalpindi", "Islamabad"];
+     
 
     const dispatch = useDispatch()
 
     const onsubmitHandler=()=>{
-       dispatch(register(name,email,password,phone))
+       dispatch(register(name,email,password,phone,city))
         
     }
 
@@ -29,6 +104,11 @@ const Signup = ({navigation}) => {
     return (
 
         <KeyboardAvoidingView behavior={'height'}  style={{paddingHorizontal: 20, flex: 1, backgroundColor: COLORS.white} }>
+                <Toast
+                    position='top'
+                    bottomOffset={20}
+                    config={toastConfig}
+                />
             <StatusBar style= "light" />
                 <ScrollView showsVerticalScrollIndicator={false}>
                     <View style={{flexDirection: 'row', marginTop: 30 , alignItems:'center'}}>
@@ -78,14 +158,48 @@ const Signup = ({navigation}) => {
 
                         <View style={{ }}>
                             <View style={styles.inputContainer}>
-                                <AntDesign name="lock" size={20} color="#A9A9A9" style={styles.inputIcon} />
+                                <AntDesign name="phone" size={20} color="#A9A9A9" style={styles.inputIcon} />
                                 <TextInput placeholder="Phone#" onChangeText={setphone} value={phone} placeholderTextColor='#A9A9A9' style={styles.input} />
                             </View>
                         </View>
+                        <View style={{marginTop:10}}>
+                            <SelectDropdown
+                                data={countries}
+                                // defaultValueByIndex={1}
+                                // defaultValue={'Egypt'}
+                                onSelect={(selectedItem, index) => {
+                                    setcity(selectedItem)
+                                }}
+                                defaultButtonText={"Select city"}
+                                buttonTextAfterSelection={(selectedItem, index) => {
+                                return selectedItem;
+                                }}
+                                rowTextForSelection={(item, index) => {
+                                return item;
+                                }}
+                                buttonStyle={styles.dropdown1BtnStyle}
+                                buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                                renderDropdownIcon={() => {
+                                return (
+                                    <FontAwesome name="chevron-down" color={"#444"} size={18} />
+                                );
+                                }}
+                                dropdownIconPosition={"right"}
+                                dropdownStyle={styles.dropdown1DropdownStyle}
+                                rowStyle={styles.dropdown1RowStyle}
+                                rowTextStyle={styles.dropdown1RowTxtStyle}
+                            />
+                        </View>
+
+         
 
 
                         <TouchableOpacity style={styles.btnPrimary} activeOpacity={0.8} onPress={onsubmitHandler}>
-                                <Text style={{color:'#fff', fontWeight: 'bold', fontSize: 18}}>Sign up</Text>
+                        {loading ?  
+                            <ActivityIndicator size="large" color="#fff" />
+                            :
+                            <Text style={{color:'#fff', fontWeight: 'bold', fontSize: 18}}>Sign up</Text>
+                            }
                         </TouchableOpacity>
           
                         <View
@@ -107,7 +221,7 @@ const Signup = ({navigation}) => {
                             flexDirection: 'row',
                             alignItems: 'flex-end',
                             justifyContent: 'center',
-                            marginTop: 10,
+                            
                             marginBottom: 20,
                     }}>
                         <Text style={{color: COLORS.light, fontWeight: 'bold'}}>
@@ -196,5 +310,22 @@ const styles = StyleSheet.create({
         width: 30, 
         backgroundColor: '#a5a5a5'
     },
+
+
+
+    dropdown1BtnStyle: {
+        width: "100%",
+        height: 50,
+        backgroundColor: "#FFF",
+        borderBottomColor:COLORS.light,
+        borderBottomWidth:1
+      },
+      dropdown1BtnTxtStyle: { color:COLORS.light, textAlign: "left" },
+      dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+      dropdown1RowStyle: {
+        backgroundColor: "#EFEFEF",
+        borderBottomColor: COLORS.light,
+      },
+      dropdown1RowTxtStyle: { color: COLORS.light, textAlign: "left" },
 
 })

@@ -9,26 +9,26 @@ import COLORS from './../consts/color';
 const ChatMessage = ({message, myId}) => {
 //   { message } = props;
   console.log("message",message)
-  const isMyMessage = () => {
-    console.log("sender_id", message.sender)
-    console.log("my_id", myId)
-    message.sender === myId;
+  // const isMyMessage = () => {
+  //   console.log("sender_id", message?.sender)
+  //   console.log("my_id", myId)
+  //   message?.sender === myId;
     
     
-  }
+  // }
 
   return (
     <View style={styles.container}>
       <View style={[
         styles.messageBox, {
-          backgroundColor: message.sender === myId ? COLORS.primary : 'white',
-          marginLeft: message.sender === myId ? 50 : 0,
-          marginRight: message.sender === myId ? 0 : 50,
+          backgroundColor: message?.sender === myId ? COLORS.primary : COLORS.pink,
+          marginLeft: message?.sender === myId ? 50 : 0,
+          marginRight: message?.sender === myId ? 0 : 50,
         }
       ]}>
-        {!message.sender === myId && <Text style={styles.name}>user name</Text>}
-        <Text style={styles.message}>{message.text}</Text>
-        <Text style={styles.time}>{moment(message.createdAt).fromNow()}</Text>
+        {!message?.sender === myId && <Text style={styles.name}>user name</Text>}
+        <Text style={styles.message}>{message?.text}</Text>
+        <Text style={styles.time}>{moment(message?.createdAt).fromNow()}</Text>
       </View>
     </View>
   )
